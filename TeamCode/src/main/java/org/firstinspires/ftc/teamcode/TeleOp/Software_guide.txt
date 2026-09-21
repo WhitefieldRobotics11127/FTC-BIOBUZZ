@@ -1,0 +1,1015 @@
+Creating a New Java File
+
+To create a new class:
+
+1. Open `TeamCode`.
+2. Navigate to:
+`src → main → java → org.firstinspires.ftc.teamcode`
+3. Right-click the package.
+4. Select **New → Package** to create an organizational folder.
+5. Right-click the desired package.
+6. Select **New → Java Class**.
+
+The package declaration must correspond to the folder:
+java: package org.firstinspires.ftc.teamcode.TeleOp;
+
+
+What Is an OpMode?
+
+An OpMode is a program that the Driver Station can run.
+
+There are two main types:
+
+### TeleOp
+
+Used when drivers control the robot.
+
+java: @TeleOp(name = "Main TeleOp")
+
+
+### Autonomous
+
+Used when the robot operates without driver input.
+
+java: @Autonomous(name = "Red Auto")
+
+
+
+Basic TeleOp
+
+A simple TeleOp looks like this:
+
+java:
+package org.firstinspires.ftc.teamcode.TeleOp;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+@TeleOp(name = "Main TeleOp")
+public class MainTeleOp extends LinearOpMode {
+
+@Override
+public void runOpMode() {
+
+telemetry.addLine("Initialized");
+telemetry.update();
+
+waitForStart();
+
+while (opModeIsActive()) {
+
+// Robot code goes here
+
+telemetry.addData("Status", "Running");
+telemetry.update();
+}
+}
+}
+```
+
+### Important parts
+
+@TeleOp(name = "Main TeleOp")
+- makes the program appear as **Main TeleOp** on the Driver Station.
+
+waitForStart();
+- waits until the driver presses PLAY.
+
+while (opModeIsActive())
+- keeps the program running until STOP is pressed.
+
+
+
+Motors
+
+To control a motor, first import:
+
+java: import com.qualcomm.robotcore.hardware.DcMotor;
+
+
+Create a motor variable:
+
+java: private DcMotor leftMotor;
+
+
+Then connect it to the hardware configuration:
+java: leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
+
+
+The name `"leftMotor"` must exactly match the name in the Robot Configuration. Names are case-sensitive. 
+
+
+
+# 7. Motor Power
+
+Motor power normally ranges from:
+
+
+-1.0 ←──────── 0 ────────→ +1.0
+Reverse       Stop       Forward
+
+Examples:
+
+```java
+motor.setPower(1.0);
+```
+
+Full forward.
+
+```java
+motor.setPower(0.5);
+```
+
+Half power.
+
+```java
+motor.setPower(0);
+```
+
+Stop.
+
+```java
+motor.setPower(-1.0);
+```
+
+Full reverse.
+
+---
+
+# 8. Basic Tank Drive
+
+Example with two motors:
+
+```java
+package org.firstinspires.ftc.teamcode.TeleOp;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@TeleOp(name = "Tank Drive")
+public class TankDrive extends LinearOpMode {
+
+private DcMotor leftMotor;
+private DcMotor rightMotor;
+
+@Override
+public void runOpMode() {
+
+leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
+rightMotor = hardwareMap.get(DcMotor.class, "rightMotor");
+
+waitForStart();
+
+while (opModeIsActive()) {
+
+double leftPower = -gamepad1.left_stick_y;
+double rightPower = -gamepad1.right_stick_y;
+
+leftMotor.setPower(leftPower);
+rightMotor.setPower(rightPower);
+}
+}
+}
+
+
+
+Four-Motor Mecanum Drive
+
+For a four-motor mecanum drivetrain:
+
+```java
+double y = -gamepad1.left_stick_y;
+double x = gamepad1.left_stick_x;
+double rx = gamepad1.right_stick_x;
+
+double denominator = Math.max(
+Math.abs(y) + Math.abs(x) + Math.abs(rx),
+1
+);
+
+double frontLeftPower = (y + x + rx) / denominator;
+double backLeftPower = (y - x + rx) / denominator;
+double frontRightPower = (y - x - rx) / denominator;
+double backRightPower = (y + x - rx) / denominator;
+```
+
+Then:
+
+```java
+frontLeft.setPower(frontLeftPower);
+backLeft.setPower(backLeftPower);
+frontRight.setPower(frontRightPower);
+backRight.setPower(backRightPower);
+```
+
+
+
+Reversing a Motor
+
+If a motor runs backward when it should run forward:
+
+```java
+motor.setDirection(DcMotorSimple.Direction.REVERSE);
+```
+
+Import:
+
+```java
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+```
+
+Example:
+
+```java
+rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+```
+
+Do this during initialization, not repeatedly inside the main loop.
+
+---
+
+Servos
+
+Servos are controlled using positions rather than motor power.
+
+Import:
+
+```java
+import com.qualcomm.robotcore.hardware.Servo;
+```
+
+Create the variable:
+
+```java
+private Servo claw;
+```
+
+Connect it:
+
+```java
+claw = hardwareMap.get(Servo.class, "claw");
+```
+
+Set its position:
+
+```java
+claw.setPosition(0.0);
+```
+
+or:
+
+```java
+claw.setPosition(1.0);
+```
+
+A common setup is:
+
+```java
+if (gamepad2.a) {
+claw.setPosition(0.0);
+}
+
+if (gamepad2.b) {
+claw.setPosition(1.0);
+}
+```
+
+The exact positions depend on the mechanism.
+
+
+
+Continuous Rotation Servos
+
+A CRServo is controlled more like a motor.
+
+```java
+import com.qualcomm.robotcore.hardware.CRServo;
+```
+
+Create:
+
+```java
+private CRServo intakeServo;
+```
+
+Connect:
+
+```java
+intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
+```
+
+Control:
+
+```java
+intakeServo.setPower(1.0);
+```
+
+Stop:
+
+```java
+intakeServo.setPower(0);
+```
+
+
+
+Gamepads
+
+FTC provides two gamepads:
+
+```java
+gamepad1
+gamepad2
+```
+
+Usually:
+
+ 
+Gamepad 1 → Driver
+Gamepad 2 → Operator
+```
+
+### Buttons
+
+```java
+gamepad1.a
+gamepad1.b
+gamepad1.x
+gamepad1.y
+```
+
+### Bumpers
+
+```java
+gamepad1.left_bumper
+gamepad1.right_bumper
+```
+
+### Triggers
+
+```java
+gamepad1.left_trigger
+gamepad1.right_trigger
+```
+
+Triggers return a value between approximately:
+
+ 
+0.0 → Not pressed
+1.0 → Fully pressed
+```
+
+### Joysticks
+
+```java
+gamepad1.left_stick_x
+gamepad1.left_stick_y
+
+gamepad1.right_stick_x
+gamepad1.right_stick_y
+```
+
+
+
+Using Buttons
+
+Example:
+
+```java
+if (gamepad2.a) {
+intake.setPower(1.0);
+}
+else {
+intake.setPower(0);
+}
+```
+
+Multiple options:
+
+```java
+if (gamepad2.a) {
+intake.setPower(1.0);
+}
+else if (gamepad2.b) {
+intake.setPower(-1.0);
+}
+else {
+intake.setPower(0);
+}
+```
+
+
+
+Encoders
+
+Encoders allow the robot to measure motor rotation.
+
+Example:
+
+```java
+motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+```
+
+Read the encoder:
+
+```java
+int position = motor.getCurrentPosition();
+```
+
+Display it:
+
+```java
+telemetry.addData("Motor Position", motor.getCurrentPosition());
+telemetry.update();
+```
+
+
+
+Moving to an Encoder Position
+
+Example:
+
+```java
+motor.setTargetPosition(1000);
+
+motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+motor.setPower(0.5);
+```
+
+You can check:
+
+```java
+while (opModeIsActive() && motor.isBusy()) {
+telemetry.addData("Position", motor.getCurrentPosition());
+telemetry.update();
+}
+```
+
+Then stop:
+
+```java
+motor.setPower(0);
+```
+
+Encoder values depend on the motor, gearing, and mechanism.
+
+
+
+Sensors
+
+The FTC SDK provides many hardware interfaces.
+
+Examples:
+
+```java
+DcMotor
+Servo
+CRServo
+DistanceSensor
+ColorSensor
+DigitalChannel
+IMU
+TouchSensor
+```
+
+The general pattern is:
+
+```java
+private SensorType sensor;
+
+sensor = hardwareMap.get(
+SensorType.class,
+"sensorName"
+);
+```
+
+The name must match the Robot Configuration. ([FIRST Tech Challenge Docs][2])
+
+---
+
+
+
+IMU
+
+The IMU can measure orientation and rotation.
+
+Import:
+
+```java
+import com.qualcomm.robotcore.hardware.IMU;
+```
+
+Create:
+
+```java
+private IMU imu;
+```
+
+Get it:
+
+```java
+imu = hardwareMap.get(IMU.class, "imu");
+```
+
+The FTC SDK provides a universal IMU interface so code can work with supported REV Control Hub IMUs. ([FIRST Tech Challenge Docs][4])
+
+The hub's physical mounting orientation must also be configured correctly for meaningful yaw/pitch/roll values.
+
+
+
+Telemetry
+
+Telemetry displays information on the Driver Station.
+
+```java
+telemetry.addData("Speed", speed);
+telemetry.update();
+```
+
+Multiple values:
+
+```java
+telemetry.addData("Left Encoder", leftMotor.getCurrentPosition());
+telemetry.addData("Right Encoder", rightMotor.getCurrentPosition());
+telemetry.addData("Speed", speed);
+telemetry.update();
+```
+
+You can also display text:
+
+```java
+telemetry.addLine("Robot Ready");
+telemetry.update();
+```
+
+Telemetry is extremely useful for debugging.
+
+
+
+Constants
+
+Instead of scattering numbers throughout the program:
+
+```java
+motor.setPower(0.73);
+```
+
+create a constants class.
+
+```java
+public class Constants {
+
+public static final double DRIVE_SPEED = 0.75;
+public static final double INTAKE_SPEED = 1.0;
+public static final double SLOW_MODE = 0.35;
+}
+```
+
+Then:
+
+```java
+motor.setPower(Constants.DRIVE_SPEED);
+```
+
+This makes tuning much easier.
+
+
+
+Subsystems
+
+As the robot becomes more complicated, don't put every mechanism into one enormous TeleOp file.
+
+Instead, create subsystem classes.
+
+Example:
+
+ 
+TeamCode
+└── org.firstinspires.ftc.teamcode
+├── TeleOp
+│   └── MainTeleOp.java
+│
+├── Autonomous
+│   └── MainAuto.java
+│
+├── Subsystems
+│   ├── Drivetrain.java
+│   ├── Intake.java
+│   └── Lift.java
+│
+└── Utilities
+└── Constants.java
+```
+
+Example `Intake.java`:
+
+```java
+package org.firstinspires.ftc.teamcode.Subsystems;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+public class Intake {
+
+private DcMotor motor;
+
+public Intake(HardwareMap hardwareMap) {
+motor = hardwareMap.get(
+DcMotor.class,
+"intake"
+);
+}
+
+public void intake() {
+motor.setPower(1.0);
+}
+
+public void reverse() {
+motor.setPower(-1.0);
+}
+
+public void stop() {
+motor.setPower(0);
+}
+}
+```
+
+Then TeleOp can use:
+
+```java
+Intake intake = new Intake(hardwareMap);
+```
+
+and:
+
+```java
+if (gamepad2.a) {
+intake.intake();
+}
+else if (gamepad2.b) {
+intake.reverse();
+}
+else {
+intake.stop();
+}
+```
+
+This is much easier for a multi-person programming team to maintain.
+
+
+
+Autonomous Programs
+
+Autonomous programs use:
+
+```java
+@Autonomous(name = "Red Auto")
+```
+
+Example:
+
+```java
+package org.firstinspires.ftc.teamcode.Autonomous;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+@Autonomous(name = "Red Auto")
+public class RedAuto extends LinearOpMode {
+
+@Override
+public void runOpMode() {
+
+// Initialize hardware
+
+telemetry.addLine("Ready");
+telemetry.update();
+
+waitForStart();
+
+// Autonomous actions
+}
+}
+```
+
+Autonomous code should generally be broken into logical steps:
+
+ 
+Initialize
+↓
+Detect starting condition
+↓
+Move
+↓
+Score
+↓
+Move
+↓
+Score
+↓
+Park
+```
+
+
+
+AprilTags
+
+## What is an AprilTag?
+
+An AprilTag is a visual fiducial marker similar to a QR code.
+
+FTC's AprilTag system can provide:
+
+* Tag ID
+* Tag detection
+* Relative position
+* Orientation
+* Pose information
+
+FTC's VisionPortal system provides the framework for AprilTag and other vision processors. ([FIRST Tech Challenge Docs][5])
+
+
+
+Basic AprilTag Setup
+
+For current FTC SDK versions, the basic approach is:
+
+ 
+Camera
+↓
+VisionPortal
+↓
+AprilTagProcessor
+↓
+AprilTag detections
+↓
+Robot decision
+```
+
+First import:
+
+```java
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+```
+
+Create:
+
+```java
+private AprilTagProcessor aprilTag;
+private VisionPortal visionPortal;
+```
+
+Initialize the processor:
+
+```java
+aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+```
+
+Then create the VisionPortal:
+
+```java
+visionPortal = VisionPortal.easyCreateWithDefaults(
+hardwareMap.get(WebcamName.class, "Webcam 1"),
+aprilTag
+);
+```
+
+The camera name must match your Robot Configuration.
+
+FTC's documentation describes this as the basic initialization process: create the AprilTag processor and then create a VisionPortal containing that processor. ([FIRST Tech Challenge Docs][6])
+
+
+
+Reading AprilTag Detections
+
+You can retrieve detections with:
+
+```java
+List<AprilTagDetection> detections = aprilTag.getDetections();
+```
+
+Import:
+
+```java
+import java.util.List;
+```
+
+Then:
+
+```java
+for (AprilTagDetection detection : detections) {
+
+telemetry.addData("Tag ID", detection.id);
+
+}
+```
+
+This allows the robot to determine which tag it sees.
+
+
+
+AprilTag Position
+
+For a single AprilTag detection, FTC provides pose information.
+
+Example:
+
+```java
+double x = detection.ftcPose.x;
+double y = detection.ftcPose.y;
+double z = detection.ftcPose.z;
+```
+
+And orientation:
+
+```java
+double pitch = detection.ftcPose.pitch;
+double roll = detection.ftcPose.roll;
+double yaw = detection.ftcPose.yaw;
+```
+
+FTC's coordinate system describes X as right, Y as outward from the camera, and Z as upward. ([FIRST Tech Challenge Docs][7])
+
+
+
+IMPORTANT: AprilTag Clusters in BIOBUZZ
+
+**The 2026–27 SDK has an important AprilTag change.**
+
+SDK 12.0 introduced **AprilTag Clusters**.
+
+A cluster can contain multiple physical AprilTags that collectively represent one target. This means older AprilTag code that assumes every `AprilTagDetection` is a single tag can produce compile errors or incorrect handling in the current SDK. ([GitHub][1])
+
+Current code needs to distinguish between:
+
+```java
+AprilTagSingleDetection
+```
+
+and:
+
+```java
+AprilTagClusterDetection
+```
+
+For example:
+
+```java
+for (AprilTagDetection detection : aprilTag.getDetections()) {
+
+if (detection instanceof AprilTagSingleDetection) {
+
+AprilTagSingleDetection single =
+(AprilTagSingleDetection) detection;
+
+telemetry.addData("Type", "Single Tag");
+telemetry.addData("ID", single.id);
+
+}
+else {
+
+AprilTagClusterDetection cluster =
+(AprilTagClusterDetection) detection;
+
+telemetry.addData("Type", "Cluster");
+
+}
+}
+```
+
+The current SDK specifically changed AprilTag processing because of this new system. **Use the current FTC sample OpModes as the authoritative reference when building your BIOBUZZ vision code.** ([GitHub][1])
+
+
+
+AprilTag Libraries
+
+FTC provides game-specific AprilTag libraries.
+
+For example:
+
+```java
+AprilTagGameDatabase.getCurrentGameTagLibrary()
+```
+
+The current SDK includes the BIOBUZZ library, and `getCurrentGameTagLibrary()` returns the current season's game library. ([FIRST Tech Challenge Docs][8])
+
+For many basic applications, you can simply use:
+
+```java
+AprilTagProcessor.easyCreateWithDefaults();
+```
+
+rather than manually constructing a library. ([FIRST Tech Challenge Docs][9])
+
+
+
+VisionPortal Shutdown
+
+When you're finished with vision processing:
+
+```java
+visionPortal.close();
+```
+
+This is useful when vision is no longer needed and you want to release camera/processing resources.
+
+
+
+GitHub Workflow
+
+Our GitHub repository is the team's central code repository.
+
+Recommended structure:
+
+ 
+main
+│
+├── stable competition code
+│
+├── dev
+│
+├── beta
+│
+├── feature/drivetrain
+├── feature/intake
+└── feature/autonomous
+```
+
+### `main`
+
+Stable competition code.
+
+### `dev`
+
+Code currently being developed and tested.
+
+### `beta`
+
+Experimental code for the beta/test robot.
+
+### Feature branches
+
+Used when someone is developing a particular feature.
+
+Example:
+
+ 
+feature/apriltag
+```
+
+---
+
+# 32. Basic Git Commands
+
+Get the latest changes:
+
+```bash
+git pull
+```
+
+Check your current branch:
+
+```bash
+git branch
+```
+
+Create a new branch:
+
+```bash
+git checkout -b feature/intake
+```
+
+Stage changes:
+
+```bash
+git add .
+```
+
+Commit:
+
+```bash
+git commit -m "Added intake controls"
+```
+
+Push:
+
+```bash
+git push
+```
+
+A good commit message explains **what changed**:
+
+ 
+Added lift encoder control
+```
+
+is better than:
+
+ 
+stuff
+```
