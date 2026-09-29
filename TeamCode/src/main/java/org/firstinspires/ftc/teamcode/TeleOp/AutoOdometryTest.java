@@ -105,8 +105,6 @@ public class AutoOdometryTest extends LinearOpMode {
 
         while (opModeIsActive())
         {
-            //goes to farthest launch dist
-            robot.switchToIndex(1);
 
             //Run Wall Strat once
             wallStrat();
@@ -121,13 +119,15 @@ public class AutoOdometryTest extends LinearOpMode {
 
         //turns towards motif
         if (opModeIsActive())
-            robot.turnCustom(Math.PI / 4, NORMAL);
-        //SHOOT
-        if (opModeIsActive())
-            robot.turnCustom(-Math.PI / 4, NORMAL);
-
-        if (opModeIsActive())
+        {
+            robot.turnCustom(Math.PI / 2, NORMAL);
             robot.forward(moveDist, NORMAL);
-
+            robot.turnCustom(-Math.PI / 2, NORMAL);
+            //SHOOT
+            robot.turnCustom(-Math.PI / 2, NORMAL);
+            robot.forward(moveDist, NORMAL);
+            robot.turnCustom(Math.PI / 2, NORMAL);
+            robot.forward(2 * moveDist, NORMAL);
+        }
     }
 }

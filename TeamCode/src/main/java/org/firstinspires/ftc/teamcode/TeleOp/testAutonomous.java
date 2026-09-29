@@ -110,9 +110,9 @@ public class testAutonomous extends LinearOpMode {
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Starting at", "%7d :%7d",
+        telemetry.addData("Starting at", "%7d :%7d %7d :%7d",
                 frontLeftDrive.getCurrentPosition(),
-                backLeftDrive.getCurrentPosition());
+                backLeftDrive.getCurrentPosition(),
                 frontRightDrive.getCurrentPosition(),
                 backRightDrive.getCurrentPosition());
         telemetry.update();
@@ -124,16 +124,10 @@ public class testAutonomous extends LinearOpMode {
         telemetry.update();
         sleep(1000);  // pause to display final telemetry message.
     }
+    while (opModeIsActive())
+    {
 
-    /*
-     *  Method to perform a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the OpMode running.
-     */
-
+    }
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -179,19 +173,23 @@ public class testAutonomous extends LinearOpMode {
                     (frontLeftDrive.isBusy() && backRightDrive.isBusy() && backLeftDrive.isBusy() && backRightDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Running to", " %7d :%7d", newLeftTarget, newRightTarget);
-                telemetry.addData("Currently at", " at %7d :%7d",
-                        leftDrive.getCurrentPosition(), rightDrive.getCurrentPosition());
+                telemetry.addData("Running to", " %7d :%7d %7d :%7d", newFrontLeftTarget, newFrontRightTarget, newBackLeftTarget, newBackRightTarget);
+                telemetry.addData("Currently at", " at %7d :%7d %7d :%7d",
+                        frontLeftDrive.getCurrentPosition(), backLeftDrive.getCurrentPosition(), frontRightDrive.getCurrentPosition(), backRightDrive.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
-            leftDrive.setPower(0);
-            rightDrive.setPower(0);
+            frontLeftDrive.setPower(0);
+            backLeftDrive.setPower(0);
+            frontRightDrive.setPower(0);
+            backRightDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(250);   // optional pause after each move.
         }
