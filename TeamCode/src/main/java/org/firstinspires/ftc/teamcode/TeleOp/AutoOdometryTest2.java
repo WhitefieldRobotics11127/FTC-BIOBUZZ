@@ -85,6 +85,7 @@ public class AutoOdometryTest2 extends LinearOpMode {
     boolean lockIn = false;
     int sleepT = 1000;
     int wallDir = 1; //blue is negative; red is postive
+    int delay = 1500;
     //@Override
     public void runOpMode() {
 
@@ -107,6 +108,7 @@ public class AutoOdometryTest2 extends LinearOpMode {
         while (opModeIsActive())
         {
 
+            sleep(delay);
             //Run Wall Strat once
             wallStrat2();
 

@@ -53,14 +53,14 @@ public class TeleopOpMode extends OpMode
     int randNum = (int)(Math.random() * 100) + 1;
     String[] quotes =
             {
-                    "Wire Management, Will", "Shooting 3\'s", "Life is Short, Cookie is Good, We are Robotics",
-                    "WE ARE ROBOTICS", "Chick-fil-a run?", "Build Team is just a bunch of people hitting things with hammers",
-                    "Dont hit the gate", "Suddenly getting the flu today", "Will will be with us in spirit", "Get up and walk",
-                    "Dont stop moving.", "Monstared", "fix it evan",
-                    "TRAPP!", "Code Issue", "Build Issue", "fly high fry guy", "literal movie",
-                    "one jellybean...", "Break the 3 - 2!", "0.00006103515% Chance of failure", "FTC please like us!!",
-                    "And 1!", "All eyes are watching you, no pressure.", "Logan probably wrote this code",
-                    "lock in.", "DONT OVERSHOOT.", "They killed PlungerBot", "go for it", "=)", "WILL KINNNG", "100% Brain Power", "Simple. Dont Miss", ""
+                    "Wire Management, JP", "Shooting 3\'s",
+                    "WE ARE ROBOTICS", "Chick-fil-a run?", "Build Team is just Davis",
+                    "Suddenly getting the flu today", "Will will will be with us in spirit", "Get up and walk",
+                    "Dont stop moving.", "Monstared", "fix it davis",
+                    "EVAN!", "Code Issue", "Build Issue", "fly high fry guy", "literal movie",
+                    "Break the 3 - 2!", "60.103515% Chance of failure", "FTC please like us!!",
+                    "And 1!", "All eyes are watching you, no pressure.", "Sawyer probably wrote this code",
+                    "lock in.", "DONT OVERSHOOT.", "They killed the RoboRibbits", "go for it", "WILL KINNNG", "Simple. Dont Miss", "L Build Team, W code team"
             };
 
     String famousLastWords = quotes[(int)(Math.random() * quotes.length)]; //Selects a random quote to display on telemetry
