@@ -277,7 +277,7 @@ public class RobotHardware  {
 
     private final OpMode myOpMode;
 
-    private DcMotorEx motor1;
+
 
     /**
      * Constructor allows calling OpMode to pass a reference to itself.
@@ -296,7 +296,7 @@ public class RobotHardware  {
      */
     public void init(boolean vision) {
 
-        motor1 = myOpMode.hardwareMap.get(DcMotorEx.class, "motor1");
+
 
         // Define Mecanum drivetrain hardware instance variables
         leftFrontDrive = myOpMode.hardwareMap.get(DcMotorEx.class, "leftfront_drive");
