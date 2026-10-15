@@ -1163,9 +1163,9 @@ public class RobotHardware  {
 
         updateLaunchPos();
 
-        double leftPower = leftLauncherPIDF.updateVelocity(targetRPM, leftLauncherRPM, launcherDt);
+        double leftPower = leftLauncherPIDF.updateVelocity(targetRPM*3, leftLauncherRPM, launcherDt);
 
-        double rightPower = rightLauncherPIDF.updateVelocity(targetRPM, rightLauncherRPM, launcherDt);
+        double rightPower = rightLauncherPIDF.updateVelocity(targetRPM*3, rightLauncherRPM, launcherDt);
 
         leftLauncherMotor.setPower(clip(leftPower, -3.0, 3.0));
         rightLauncherMotor.setPower(clip(rightPower, -3.0, 3.0));
