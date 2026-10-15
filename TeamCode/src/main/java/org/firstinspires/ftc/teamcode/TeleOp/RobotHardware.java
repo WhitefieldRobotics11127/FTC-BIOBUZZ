@@ -1167,8 +1167,8 @@ public class RobotHardware  {
 
         double rightPower = rightLauncherPIDF.updateVelocity(targetRPM, rightLauncherRPM, launcherDt);
 
-        leftLauncherMotor.setPower(clip(leftPower, -1.0, 1.0));
-        rightLauncherMotor.setPower(clip(rightPower, -1.0, 1.0));
+        leftLauncherMotor.setPower(clip(leftPower, -3.0, 3.0));
+        rightLauncherMotor.setPower(clip(rightPower, -3.0, 3.0));
     }
 
     public void shootOff() {  // turns off the shooter
