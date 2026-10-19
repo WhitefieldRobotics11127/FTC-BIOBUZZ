@@ -213,11 +213,11 @@ public class TeleopOpMode extends OpMode
             robot.shootOff();
 
         else if (gamepad2.xWasPressed())
-            robot.forwardSizzleSteak(.7);
+            robot.forwardSizzleSteak(1);
         else if (gamepad2.xWasReleased())
             robot.sizzleSteakOff();
         else if (gamepad2.yWasPressed())
-            robot.reverseSizzleSteak(.7);
+            robot.reverseSizzleSteak(1);
         else if (gamepad2.yWasReleased())
             robot.sizzleSteakOff();
         else if (gamepad2.left_trigger >= 0.5) {
