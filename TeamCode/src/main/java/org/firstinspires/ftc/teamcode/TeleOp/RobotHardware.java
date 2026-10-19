@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
-
 // This file not meant for redistribution - copyright notice removed
 /*
  * This class provides a hardware abstraction layer for WA Robotics INTO THE DEEP competition robot.
@@ -20,7 +19,6 @@ package org.firstinspires.ftc.teamcode.TeleOp;
  * (North, West, and Up) coordinate frame is used for robot axes, with the +X-axis forward, the
  *  +Y-axis to the left, the +Z-axis up, and +Yaw is counterclockwise.
  */
-
 /*
  * For the most part, imports are managed by the Android Studio IDE through the "Auto Import"
  * feature setting (under File->Settings, drill down to Editor>General>Auto Import), but may
