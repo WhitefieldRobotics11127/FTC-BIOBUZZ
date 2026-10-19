@@ -1163,12 +1163,11 @@ public class RobotHardware  {
 
         updateLaunchPos();
 
-        double leftPower = leftLauncherPIDF.updateVelocity(targetRPM, leftLauncherRPM, launcherDt);
+        double rightPower = rightLauncherPIDF.updateVelocity(targetRPM*1000, rightLauncherRPM*10, launcherDt);
 
-        double rightPower = rightLauncherPIDF.updateVelocity(targetRPM, rightLauncherRPM, launcherDt);
-
-        leftLauncherMotor.setPower(clip(leftPower, -3.0, 3.0));
-        rightLauncherMotor.setPower(clip(rightPower, -3.0, 3.0));
+        // Cranking up leftLauncherMotor to absolute maximum power (1.0 = 100% max potential)
+        leftLauncherMotor.setPower(1.0);
+        rightLauncherMotor.setPower(clip(rightPower * 2.0, -1.0, 1.0));
     }
 
     public void shootOff() {  // turns off the shooter

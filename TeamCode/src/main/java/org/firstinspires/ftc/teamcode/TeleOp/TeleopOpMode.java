@@ -85,7 +85,7 @@ public class TeleopOpMode extends OpMode
     int lastRightPos = 0;
     ElapsedTime launcherTimer = new ElapsedTime();
 
-    double shootDist =  .68;
+    double shootDist =  .85;
 
     /*
      * Code to run ONCE when the driver hits INIT
