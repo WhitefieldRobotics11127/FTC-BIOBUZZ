@@ -206,7 +206,7 @@ public class RobotHardware  {
     // the DCMotorEx class.
     private DcMotorEx leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;  //  Motors for Mecanum drive
     private DcMotorEx rightDeadwheelEncoder, leftDeadwheelEncoder, auxDeadwheelEncoder; // Encoders (deadwheels) for odometry
-    private DcMotorEx sizzleMotor, steakMotor; //Motor for "Kebob" motor
+    private DcMotorEx sizzleMotor, steakMotor, sizzleMotor2; //Motor for "Kebob" motor
     private DcMotorEx leftLauncherMotor, rightLauncherMotor; // Motors for the launcher motor
     private VisionPortal visionPortal; // Used to manage the camera input and activation of video processors.
     private WebcamName webcam1, webcam2; // For identifying webcam(s)
@@ -365,7 +365,8 @@ public class RobotHardware  {
         // NOTE: The sizzleMotor, rightLauncherMotor, and steakMotor use Use the same hardware
         // mappings as the auxiliary odometry encoder, right odometry encoder, and left odometry,
         // respectively.
-        sizzleMotor =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux"); // Port 0
+        sizzleMotor =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux");
+        sizzleMotor2 =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux_2"); // Port 0
         rightLauncherMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_right"); // Port 1
         leftLauncherMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "left_launcher_motor"); //Port 2
         steakMotor =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_left"); // Port 3
@@ -400,6 +401,10 @@ public class RobotHardware  {
         sizzleMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         sizzleMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        sizzleMotor2.setDirection(DcMotorEx.Direction.FORWARD);
+        sizzleMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        sizzleMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         steakMotor.setDirection(DcMotorEx.Direction.REVERSE);
         DEADWHEEL_LEFT_DIRECTION *= -1; // Account for corresponding direction change in encoder deadwheel connected to same motor port
         steakMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
@@ -415,6 +420,7 @@ public class RobotHardware  {
 
         // Make sure all the motors are stopped
         sizzleMotor.setPower(0.0);
+        sizzleMotor2.setPower(0.0);
         steakMotor.setPower(0.0);
         leftLauncherMotor.setPower(0.0);
         rightLauncherMotor.setPower(0.0);
@@ -1218,6 +1224,7 @@ public class RobotHardware  {
 
     public void sizzleOff() {
         sizzleMotor.setPower(0);
+
     }
 
     public void steakOff() {
@@ -1235,6 +1242,32 @@ public class RobotHardware  {
     }
 
     public void sizzleSteakOff()
+    {
+        sizzleMotor.setPower(0);
+        steakMotor.setPower(0);
+
+    }
+
+    public void sizzleOff2() {
+        sizzleMotor.setPower(0);
+
+    }
+
+    public void steakOff2() {
+        steakMotor.setPower(0);
+    }
+
+    public void forwardSizzleSteak2(double power) {
+        sizzleMotor.setPower(power);
+        steakMotor.setPower(power);
+    }
+
+    public void reverseSizzleSteak2(double power) {
+        sizzleMotor.setPower(-power);
+        steakMotor.setPower(-power);
+    }
+
+    public void sizzleSteakOff2()
     {
         sizzleMotor.setPower(0);
         steakMotor.setPower(0);

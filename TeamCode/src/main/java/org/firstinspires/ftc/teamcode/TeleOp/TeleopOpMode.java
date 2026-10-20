@@ -217,12 +217,13 @@ public class TeleopOpMode extends OpMode
         else if (gamepad2.xWasReleased())
             robot.sizzleSteakOff();
         else if (gamepad2.yWasPressed())
-            robot.reverseSizzleSteak(1);
+            robot.forwardSizzleSteak2(1);
         else if (gamepad2.yWasReleased())
-            robot.sizzleSteakOff();
+            robot.sizzleSteakOff2();
         else if (gamepad2.left_trigger >= 0.5) {
             robot.reverseLauncher(.6);
         }
+
         telemetry.addLine("-----------Player 1-----------");
         telemetry.addData("Speed Factor", speedFactorNames.get(speedFactor));
         telemetry.addData("Status", "Running (%s)", runtime.toString());
