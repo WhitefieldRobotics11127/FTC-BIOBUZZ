@@ -371,6 +371,7 @@ public class RobotHardware  {
         leftLauncherMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "left_launcher_motor"); //Port 2
         steakMotor =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_left"); // Port 3
 
+
         launcherTimer = new ElapsedTime();
         launcherTimer.reset();
 
@@ -1167,7 +1168,7 @@ public class RobotHardware  {
 
         updateLaunchPos();
 
-        double rightPower = rightLauncherPIDF.updateVelocity(targetRPM*1000, rightLauncherRPM*10, launcherDt);
+        double rightPower = rightLauncherPIDF.updateVelocity(targetRPM*350, rightLauncherRPM*10, launcherDt);
 
         // Cranking up leftLauncherMotor to absolute maximum power (1.0 = 100% max potential)
         leftLauncherMotor.setPower(1.0);
