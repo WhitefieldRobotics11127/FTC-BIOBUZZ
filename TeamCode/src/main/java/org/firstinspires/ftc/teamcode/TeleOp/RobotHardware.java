@@ -347,7 +347,7 @@ public class RobotHardware  {
 
         // Define odometry encoder hardware instance variables
         rightDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "left_launcher_motor");
-        leftDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux_2");
+        leftDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux_2");//
         auxDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux");
 
 
