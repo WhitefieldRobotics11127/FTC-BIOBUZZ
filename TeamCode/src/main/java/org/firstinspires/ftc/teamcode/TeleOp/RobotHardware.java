@@ -207,7 +207,7 @@ public class RobotHardware  {
     private DcMotorEx leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;  //  Motors for Mecanum drive
     private DcMotorEx rightDeadwheelEncoder, leftDeadwheelEncoder, auxDeadwheelEncoder; // Encoders (deadwheels) for odometry
     private DcMotorEx sizzleMotor, steakMotor, sizzleMotor2; //Motor for "Kebob" motor
-    private DcMotorEx leftLauncherMotor; // Motors for the launcher motor
+    private DcMotorEx leftLauncherMotor, rightLauncherMotor; // Motors for the launcher motor
     private VisionPortal visionPortal; // Used to manage the camera input and activation of video processors.
     private WebcamName webcam1, webcam2; // For identifying webcam(s)
     private LED shoot1LED;
@@ -348,6 +348,7 @@ public class RobotHardware  {
         // Define odometry encoder hardware instance variables
         rightDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_right");
         leftDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_left");
+        leftDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_left");
         auxDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux");
 
 
@@ -383,6 +384,7 @@ public class RobotHardware  {
 
         //Positions of left and right launchers
         lastLeftPos = leftLauncherMotor.getCurrentPosition();
+        lastRightPos = rightLauncherMotor.getCurrentPosition();
 
         //Create PIDF Controllers:
         leftLauncherPIDF  = new VelocityPIDF(0.00025, 0.0, 0.00001, 0.05);
@@ -413,20 +415,27 @@ public class RobotHardware  {
         leftLauncherMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         leftLauncherMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
+        rightLauncherMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        rightLauncherMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightLauncherMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         // Make sure all the motors are stopped
         sizzleMotor.setPower(0.0);
         sizzleMotor2.setPower(0.0);
         steakMotor.setPower(0.0);
         leftLauncherMotor.setPower(0.0);
+        rightLauncherMotor.setPower(0.0);
 
         // Set the run mode to RUN_WITHOUT_ENCODER
         leftLauncherMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightLauncherMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
 
         //Change directions for shooter motors
         leftLauncherMotor.setDirection(DcMotorEx.Direction.FORWARD);
         leftLauncherMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        rightLauncherMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        rightLauncherMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
 
 
@@ -1137,13 +1146,18 @@ public class RobotHardware  {
         if (dt <= 0) return;
 
         int leftPos  = leftLauncherMotor.getCurrentPosition();
+        int rightPos = rightLauncherMotor.getCurrentPosition();
 
         double leftTicksPerSec =
                 (leftPos - lastLeftPos) / dt;
+        double rightTicksPerSec =
+                (rightPos - lastRightPos) / dt;
 
         lastLeftPos  = leftPos;
+        lastRightPos = rightPos;
 
         leftLauncherRPM  = (leftTicksPerSec  / LAUNCHER_TICKS_PER_REV) * 60.0;
+        rightLauncherRPM = (rightTicksPerSec / LAUNCHER_TICKS_PER_REV) * 60.0;
 
 
     }
@@ -1158,10 +1172,12 @@ public class RobotHardware  {
 
         // Cranking up leftLauncherMotor to absolute maximum power (1.0 = 100% max potential)
         leftLauncherMotor.setPower(1.0);
+        rightLauncherMotor.setPower(clip(rightPower * 2.0, -1.0, 1.0));
     }
 
     public void shootOff() {  // turns off the shooter
         leftLauncherMotor.setPower(0);
+        rightLauncherMotor.setPower(0);
     }
 
     public void nextShootIndex() {
@@ -1261,6 +1277,7 @@ public class RobotHardware  {
 
     public void reverseLauncher(double power) {
         leftLauncherMotor.setPower(-Math.abs(power));
+        rightLauncherMotor.setPower(-Math.abs(power));
 
 
     }
