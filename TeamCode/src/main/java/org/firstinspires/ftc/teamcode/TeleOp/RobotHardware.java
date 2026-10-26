@@ -346,10 +346,9 @@ public class RobotHardware  {
         rightBackDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         // Define odometry encoder hardware instance variables
-        rightDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_right");
-        leftDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_left");
-        leftDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_left");
-        auxDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux");
+        rightDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_right"); // Port 2
+        leftDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux_2"); // Port 1
+        auxDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux"); // Port 0
 
 
         // Reset the encoder values
@@ -366,10 +365,9 @@ public class RobotHardware  {
         // NOTE: The sizzleMotor, rightLauncherMotor, and steakMotor use Use the same hardware
         // mappings as the auxiliary odometry encoder, right odometry encoder, and left odometry,
         // respectively.
-        sizzleMotor =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux");
-        sizzleMotor2 =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux_2"); // Port 0
+        sizzleMotor =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux"); // Port 0
+        sizzleMotor2 =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux_2"); // Port 1
         leftLauncherMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "left_launcher_motor"); //Port 2
-        steakMotor =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_left"); // Port 3
 
 
         launcherTimer = new ElapsedTime();
