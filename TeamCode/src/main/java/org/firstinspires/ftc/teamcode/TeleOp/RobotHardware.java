@@ -343,7 +343,7 @@ public class RobotHardware  {
         leftFrontDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER); // may not be needed
         leftBackDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);//
 
         // Define odometry encoder hardware instance variables
         rightDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "left_launcher_motor");
