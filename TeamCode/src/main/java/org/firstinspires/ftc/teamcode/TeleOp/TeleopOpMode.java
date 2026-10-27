@@ -82,7 +82,6 @@ public class TeleopOpMode extends OpMode
     // thread in the loop() function waiting for the arm to reach the desired position.
 
     int lastLeftPos = 0;
-    int lastRightPos = 0;
     ElapsedTime launcherTimer = new ElapsedTime();
 
     double shootDist =  .85;

@@ -206,8 +206,8 @@ public class RobotHardware  {
     // the DCMotorEx class.
     private DcMotorEx leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive;  //  Motors for Mecanum drive
     private DcMotorEx rightDeadwheelEncoder, leftDeadwheelEncoder, auxDeadwheelEncoder; // Encoders (deadwheels) for odometry
-    private DcMotorEx sizzleMotor, steakMotor, sizzleMotor2; //Motor for "Kebob" motor
-    private DcMotorEx leftLauncherMotor, rightLauncherMotor; // Motors for the launcher motor
+    private DcMotorEx sizzleMotor, sizzleMotor2; //Motor for "Kebob" motor
+    private DcMotorEx leftLauncherMotor; // Motor for the launcher motor
     private VisionPortal visionPortal; // Used to manage the camera input and activation of video processors.
     private WebcamName webcam1, webcam2; // For identifying webcam(s)
     private LED shoot1LED;
@@ -248,16 +248,13 @@ public class RobotHardware  {
     // properties and statuses from the running opmode.
     //Launcher encoder tracking
     private int lastLeftPos = 0;
-    private int lastRightPos = 0;
 
     private double launcherDt = 0.0;
 
     private VelocityPIDF leftLauncherPIDF;
-    private VelocityPIDF rightLauncherPIDF;
 
     // Velocity tracking
     private double leftLauncherRPM = 0.0;
-    private double rightLauncherRPM = 0.0;
 
     //shootDist switcher
     private double[] shootDist = new double[3];
@@ -343,32 +340,23 @@ public class RobotHardware  {
         leftFrontDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER); // may not be needed
         leftBackDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);//
+        rightBackDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         // Define odometry encoder hardware instance variables
-        rightDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "left_launcher_motor");
-        leftDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux_2");//
-        auxDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux");
-
+        auxDeadwheelEncoder   = myOpMode.hardwareMap.get(DcMotorEx.class, "port0_aux");   // Port 0
+        leftDeadwheelEncoder  = myOpMode.hardwareMap.get(DcMotorEx.class, "port1_left");  // Port 1
+        rightDeadwheelEncoder = myOpMode.hardwareMap.get(DcMotorEx.class, "port2_right"); // Port 2
 
         // Reset the encoder values
         rightDeadwheelEncoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         leftDeadwheelEncoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        auxDeadwheelEncoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);//o
+        auxDeadwheelEncoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-
-
-
-        // Define launcher hardware instance variables
-        //
-        // Define launcher hardware instance variables
-        // NOTE: The sizzleMotor, rightLauncherMotor, and steakMotor use Use the same hardware
-        // mappings as the auxiliary odometry encoder, right odometry encoder, and left odometry,
-        // respectively.
-        sizzleMotor =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux");
-        sizzleMotor2 =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_aux_2"); // Port 0
-        leftLauncherMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "left_launcher_motor"); //Port 2
-        steakMotor =  myOpMode.hardwareMap.get(DcMotorEx.class, "encoder_left"); // Port 3
+        // Define launcher & auxiliary motor hardware instance variables
+        // NOTE: These motors share physical ports with the odometry encoders above.
+        sizzleMotor       = myOpMode.hardwareMap.get(DcMotorEx.class, "port0_aux");   // Port 0
+        sizzleMotor2      = myOpMode.hardwareMap.get(DcMotorEx.class, "port1_left");  // Port 1
+        leftLauncherMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "port2_right"); // Port 2
 
 
         launcherTimer = new ElapsedTime();
@@ -381,20 +369,17 @@ public class RobotHardware  {
         shoot3LED = myOpMode.hardwareMap.get(LED.class, "shoot3");
 
 
-        //Positions of left and right launchers
+        //Position of left launcher
         lastLeftPos = leftLauncherMotor.getCurrentPosition();
-        lastRightPos = rightLauncherMotor.getCurrentPosition();
 
-        //Create PIDF Controllers:
-        leftLauncherPIDF  = new VelocityPIDF(0.00025, 0.0, 0.00001, 0.05);
-        rightLauncherPIDF = new VelocityPIDF(0.00025, 0.0, 0.00001, 0.05);
+        //Create PIDF Controller:
+        leftLauncherPIDF = new VelocityPIDF(0.00025, 0.0, 0.00001, 0.05);
 
         //Setting indexes for shoot range:
         shootDist[0] = 13.5;
         shootDist[1] = 15;
 
         currLaunchVel = shootDist[0];
-
 
         // Initialize settings for launcher and kebob motors
         sizzleMotor.setDirection(DcMotorEx.Direction.FORWARD);
@@ -405,36 +390,21 @@ public class RobotHardware  {
         sizzleMotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         sizzleMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        steakMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        DEADWHEEL_LEFT_DIRECTION *= -1; // Account for corresponding direction change in encoder deadwheel connected to same motor port
-        steakMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        steakMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         leftLauncherMotor.setDirection(DcMotorEx.Direction.FORWARD);
         leftLauncherMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         leftLauncherMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        rightLauncherMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        rightLauncherMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        rightLauncherMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
         // Make sure all the motors are stopped
         sizzleMotor.setPower(0.0);
         sizzleMotor2.setPower(0.0);
-        steakMotor.setPower(0.0);
         leftLauncherMotor.setPower(0.0);
-        rightLauncherMotor.setPower(0.0);
 
         // Set the run mode to RUN_WITHOUT_ENCODER
         leftLauncherMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        rightLauncherMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-
-        //Change directions for shooter motors
+        //Change directions for shooter motor
         leftLauncherMotor.setDirection(DcMotorEx.Direction.FORWARD);
         leftLauncherMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        rightLauncherMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        rightLauncherMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
 
 
@@ -1144,39 +1114,26 @@ public class RobotHardware  {
 
         if (dt <= 0) return;
 
-        int leftPos  = leftLauncherMotor.getCurrentPosition();
-        int rightPos = rightLauncherMotor.getCurrentPosition();
+        int leftPos = leftLauncherMotor.getCurrentPosition();
 
-        double leftTicksPerSec =
-                (leftPos - lastLeftPos) / dt;
-        double rightTicksPerSec =
-                (rightPos - lastRightPos) / dt;
+        double leftTicksPerSec = (leftPos - lastLeftPos) / dt;
 
-        lastLeftPos  = leftPos;
-        lastRightPos = rightPos;
+        lastLeftPos = leftPos;
 
-        leftLauncherRPM  = (leftTicksPerSec  / LAUNCHER_TICKS_PER_REV) * 60.0;
-        rightLauncherRPM = (rightTicksPerSec / LAUNCHER_TICKS_PER_REV) * 60.0;
-
-
+        leftLauncherRPM = (leftTicksPerSec / LAUNCHER_TICKS_PER_REV) * 60.0;
     }
-    public void shootOn(double targetRPM) { //Changed this to use RPM instead of pure power to (hopefully) allow better shooting.
 
+    public void shootOn(double targetRPM) { //Changed this to use RPM instead of pure power to (hopefully) allow better shooting.
         leftLauncherPIDF.reset();
-        rightLauncherPIDF.reset();
 
         updateLaunchPos();
 
-        double rightPower = rightLauncherPIDF.updateVelocity(targetRPM*350, rightLauncherRPM*10, launcherDt);
-
         // Cranking up leftLauncherMotor to absolute maximum power (1.0 = 100% max potential)
         leftLauncherMotor.setPower(1.0);
-        rightLauncherMotor.setPower(clip(rightPower * 2.0, -1.0, 1.0));
     }
 
     public void shootOff() {  // turns off the shooter
         leftLauncherMotor.setPower(0);
-        rightLauncherMotor.setPower(0);
     }
 
     public void nextShootIndex() {
@@ -1224,61 +1181,38 @@ public class RobotHardware  {
 
     public void sizzleOff() {
         sizzleMotor.setPower(0);
-
-    }
-
-    public void steakOff() {
-        steakMotor.setPower(0);
     }
 
     public void forwardSizzleSteak(double power) {
         sizzleMotor.setPower(power);
-        steakMotor.setPower(power);
     }
 
     public void reverseSizzleSteak(double power) {
         sizzleMotor.setPower(-power);
-        steakMotor.setPower(-power);
     }
 
-    public void sizzleSteakOff()
-    {
+    public void sizzleSteakOff() {
         sizzleMotor.setPower(0);
-        steakMotor.setPower(0);
-
     }
 
     public void sizzleOff2() {
-        sizzleMotor.setPower(0);
-
-    }
-
-    public void steakOff2() {
-        steakMotor.setPower(0);
+        sizzleMotor2.setPower(0);
     }
 
     public void forwardSizzleSteak2(double power) {
-        sizzleMotor.setPower(power);
-        steakMotor.setPower(power);
+        sizzleMotor2.setPower(power);
     }
 
     public void reverseSizzleSteak2(double power) {
-        sizzleMotor.setPower(-power);
-        steakMotor.setPower(-power);
+        sizzleMotor2.setPower(-power);
     }
 
-    public void sizzleSteakOff2()
-    {
-        sizzleMotor.setPower(0);
-        steakMotor.setPower(0);
-
+    public void sizzleSteakOff2() {
+        sizzleMotor2.setPower(0);
     }
 
     public void reverseLauncher(double power) {
         leftLauncherMotor.setPower(-Math.abs(power));
-        rightLauncherMotor.setPower(-Math.abs(power));
-
-
     }
 
     /*---- LED Methods ---*/
