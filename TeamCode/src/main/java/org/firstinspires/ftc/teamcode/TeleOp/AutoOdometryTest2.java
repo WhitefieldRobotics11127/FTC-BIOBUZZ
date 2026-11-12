@@ -83,12 +83,8 @@ public class AutoOdometryTest2 extends LinearOpMode {
     private final double NORMAL = RobotHardware.MOTOR_SPEED_FACTOR_NORMAL;
     private final double FAST = RobotHardware.MOTOR_SPEED_FACTOR_DAVIS;
 
-    int moveDist = 550;
-    boolean lockIn = false;
-    int sleepT = 1000;
-    int wallDir = 1; //blue is negative; red is postive
     int delay = 1500;
-    //@Override
+    @Override
     public void runOpMode() {
 
         // initialize all the hardware, using the hardware class. See how clean and simple this is?
@@ -97,43 +93,55 @@ public class AutoOdometryTest2 extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-
-
         // Wait for the game to start (driver presses START)
         waitForStart();
 
         // Reset the runtime timer
         runtime.reset();
 
-
-
-        while (opModeIsActive())
-        {
-
+        if (opModeIsActive()) {
             sleep(delay);
-            //Run Wall Strat once
-            wallStrat2();
-
+            // Execute the 4-ball shooting and driving autonomous routine
+            fourBallShootAndDriveAuto();
         }
-        // Make sure robot stops (teleop initialization default) before OpMode dies
-        robot.stop();
 
+        // Make sure robot stops before OpMode dies
+        robot.stop();
     }
 
-    private void wallStrat2() {
+    private void fourBallShootAndDriveAuto() {
+        if (!opModeIsActive()) return;
 
-        //turns towards motif
-        if (opModeIsActive())
-        {
-            robot.turnCustom(-Math.PI / 2, NORMAL);
-            robot.forward(moveDist, NORMAL);
-            robot.turnCustom(Math.PI / 2, NORMAL);
-            //SHOOT
-            robot.turnCustom(Math.PI / 2, NORMAL);
-            robot.forward(moveDist, NORMAL);
-            robot.turnCustom(-Math.PI / 2, NORMAL);
-            robot.forward(2 * moveDist, NORMAL);
-        }
+        // Step 1: Shoot all 4 balls currently in the robot
+        robot.shootOn(robot.currLaunchVel);
+        sleep(1000);                  // Wait for flywheel to spin up to max speed
+        robot.forwardSizzleSteak(1.0); // Feed balls into the launcher
+        sleep(2000);                  // Duration to feed all 4 balls
+        robot.sizzleSteakOff();       // Stop feeder
+        robot.shootOff();             // Turn off shooter
+
+        // Step 2: Rotate 90 degrees counterclockwise
+        robot.turnCustom(Math.PI / 2, NORMAL);
+
+        // Step 3: Go forward 4ft (4 ft * 304.8 mm/ft ≈ 1219 mm) and intake balls (intake code omitted)
+        robot.forward(1219, NORMAL);
+
+        // Step 4: Rotate -90 degrees
+        robot.turnCustom(-Math.PI / 2, NORMAL);
+
+        // Step 5: Go forward to 10ft (10 ft * 304.8 mm/ft = 3048 mm)
+        robot.forward(3048, NORMAL);
+
+        // Step 6: Rotate -120 degrees
+        robot.turnCustom(-Math.toRadians(120), NORMAL);
+
+        // Step 7: Shoot all 4 balls again
+        robot.shootOn(robot.currLaunchVel);
+        sleep(1000);
+        robot.forwardSizzleSteak(1.0);
+        sleep(2000);
+        robot.sizzleSteakOff();
+        robot.shootOff();
     }
 
 }
