@@ -164,7 +164,7 @@ public class TeleopOpMode extends OpMode
 
             // Move the robot in the direction of the d-pad button pressed at 1/2 precision speed
             if (gamepad1.dpad_up && !lastGamepad1.dpad_up) {
-                robot.forward(200, evanButton * 0.5);
+                robot.move(1, 0, 0, evanButton * 0.5);
             } else if (gamepad1.dpad_down && !lastGamepad1.dpad_down) {
                 robot.move(-1, 0, 0, evanButton * 0.5);
             } else if (gamepad1.dpad_left && !lastGamepad1.dpad_left) {

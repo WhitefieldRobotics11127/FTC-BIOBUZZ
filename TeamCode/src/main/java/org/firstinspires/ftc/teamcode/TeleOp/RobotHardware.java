@@ -300,16 +300,16 @@ public class RobotHardware  {
         rightBackDrive = myOpMode.hardwareMap.get(DcMotorEx.class, "rightback_drive");
 
         // Set the direction, braking, and run mode for each motor
-        leftFrontDrive.setDirection(DcMotorEx.Direction.FORWARD); // based on which way the motor is mounted
-        leftFrontDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE); // don't allow overrun
-        leftFrontDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER); // increased accuracy and balance from controls
+        leftFrontDrive.setDirection(DcMotorEx.Direction.REVERSE); // Left side motors REVERSE so positive power drives forward
+        leftFrontDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        leftBackDrive.setDirection(DcMotorEx.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotorEx.Direction.REVERSE);
         leftBackDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        rightFrontDrive.setDirection(DcMotorEx.Direction.FORWARD);
-        rightBackDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setDirection(DcMotorEx.Direction.FORWARD); // Right side motors FORWARD so positive power drives forward
+        rightFrontDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         rightBackDrive.setDirection(DcMotorEx.Direction.FORWARD);
