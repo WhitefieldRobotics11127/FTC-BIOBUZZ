@@ -65,7 +65,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Blue Wall Auto", group="Auto")
+@Autonomous(name="Auto 1 -USE-" +
+        "", group="Auto")
 //@Disabled
 public class AutoOdometryTest2 extends LinearOpMode {
 

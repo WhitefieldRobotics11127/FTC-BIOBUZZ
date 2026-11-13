@@ -304,11 +304,11 @@ public class RobotHardware  {
         leftFrontDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE); // don't allow overrun
         leftFrontDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER); // increased accuracy and balance from controls
 
-        leftBackDrive.setDirection(DcMotorEx.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotorEx.Direction.REVERSE);
         leftBackDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        rightFrontDrive.setDirection(DcMotorEx.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotorEx.Direction.REVERSE);
         rightBackDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
@@ -352,7 +352,7 @@ public class RobotHardware  {
         leftDeadwheelEncoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         auxDeadwheelEncoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        // Define launcher & auxiliary motor hardware instance variables
+        // Define launche  & auxiliary motor hardware instance variables
         // NOTE: These motors share physical ports with the odometry encoders above.
         sizzleMotor       = myOpMode.hardwareMap.get(DcMotorEx.class, "port0_aux");   // Port 0
         sizzleMotor2      = myOpMode.hardwareMap.get(DcMotorEx.class, "port1_left");  // Port 1
@@ -487,6 +487,8 @@ public class RobotHardware  {
         double rightFrontPower = x + y + yaw;
         double leftBackPower = x + y - yaw;
         double rightBackPower = x - y + yaw;
+
+        //
 
         // Normalize wheel powers to be less than 1.0 but retain the balance between the four
         // wheels calculated above.
