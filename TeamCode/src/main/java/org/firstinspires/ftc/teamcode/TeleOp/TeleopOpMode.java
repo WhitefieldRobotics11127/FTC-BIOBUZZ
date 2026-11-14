@@ -149,8 +149,6 @@ public class TeleopOpMode extends OpMode
             speedFactor = RobotHardware.MOTOR_SPEED_FACTOR_NORMAL;
         } else if (gamepad1.x && !lastGamepad1.x) {
             speedFactor = RobotHardware.MOTOR_SPEED_FACTOR_DAVIS; // fly high fry guy
-        } else if (gamepad1.b && !lastGamepad1.b) {
-            speedFactor = RobotHardware.MOTOR_SPEED_FACTOR_PRECISE;
         } else if (gamepad1.y) {
             evanButton = speedFactor;
         }
@@ -206,9 +204,9 @@ public class TeleopOpMode extends OpMode
             robot.switchToIndex(0);
         else if (!lastGamepad2.dpad_down && gamepad2.dpad_down)
             robot.switchToIndex(1);
-        else if (gamepad2.a)
+        else if (gamepad2.leftTriggerWasPressed())
             robot.shootOn(robot.currLaunchVel);
-        else if (gamepad2.b)
+        else if (gamepad2.leftTriggerWasReleased())
             robot.shootOff();
             robot.sizzleSteakOff2();
 
@@ -216,13 +214,10 @@ public class TeleopOpMode extends OpMode
             robot.forwardSizzleSteak(1);
         else if (gamepad2.rightTriggerWasReleased())
             robot.sizzleSteakOff();
-        else if (gamepad2.y)
-            robot.forwardSizzleSteak2(.82);
+        else if (gamepad2.yWasPressed())
+            robot.forwardSizzleSteak2(.79);
         //else if (gamepad2.yWasReleased())
            // robot.sizzleSteakOff2();
-        else if (gamepad2.left_trigger >= 0.5) {
-            robot.reverseLauncher(.35);
-        }
 
         telemetry.addLine("-----------Player 1-----------");
         telemetry.addData("Speed Factor", speedFactorNames.get(speedFactor));
