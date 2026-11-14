@@ -179,7 +179,7 @@ public class TeleopOpMode extends OpMode
                 if (gamepad2.right_bumper)
                     robot.move(0, 0, -2, evanButton * 0.5);
                 else if (gamepad2.left_bumper)
-                    robot.forwardSizzleSteak2(.82);
+                    robot.forwardSizzleSteak2(1);
             } else {
                 // Use left joystick to go forward & strafe, and right joystick to rotate.
                 // NOTE: the robot.move() function takes values in FTC coordinate system values, where
