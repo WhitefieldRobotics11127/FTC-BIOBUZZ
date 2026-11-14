@@ -114,11 +114,13 @@ public class AutoOdometryTest2 extends LinearOpMode {
         if (!opModeIsActive()) return;
 
         // Step 1: Shoot all 4 balls currently in the robot
-        robot.shootOn(robot.currLaunchVel);
+        robot.forwardSizzleSteak2(.935);
         sleep(1000);                  // Wait for flywheel to spin up to max speed
-        robot.forwardSizzleSteak(1.0); // Feed balls into the launcher
+        robot.forwardSizzleSteak(1);
+        robot.shootOn(robot.currLaunchVel);// Feed balls into the launcher
         sleep(2000);                  // Duration to feed all 4 balls
-        robot.sizzleSteakOff();       // Stop feeder
+        robot.sizzleSteakOff();
+        robot.sizzleSteakOff2();// Stop feeder
         robot.shootOff();             // Turn off shooter
 
         // Step 2: Rotate 90 degrees counterclockwise

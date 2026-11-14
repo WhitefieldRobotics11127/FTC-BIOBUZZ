@@ -191,9 +191,10 @@ public class TeleopOpMode extends OpMode
                 double yaw = -gamepad1.right_stick_x;  // pushing stick left gives negative value
                 robot.move(axial, lateral, yaw, speedFactor);
 
-
-
-
+        // A: Top Intake
+        // B: Stop motors
+        // X: Bottom Intakes
+        // Y: Launcher
 
             }
         }
@@ -201,7 +202,6 @@ public class TeleopOpMode extends OpMode
         // ***** Kebob / Launcher from Gamepad2 *****
 
         //Controls for Player 2 - Shoot Person
-
         if (!lastGamepad2.dpad_up && gamepad2.dpad_up )
             robot.switchToIndex(0);
         else if (!lastGamepad2.dpad_down && gamepad2.dpad_down)
@@ -210,15 +210,16 @@ public class TeleopOpMode extends OpMode
             robot.shootOn(robot.currLaunchVel);
         else if (gamepad2.b)
             robot.shootOff();
+            robot.sizzleSteakOff2();
 
-        else if (gamepad2.xWasPressed())
+        if (gamepad2.xWasPressed())
             robot.forwardSizzleSteak(1);
         else if (gamepad2.xWasReleased())
             robot.sizzleSteakOff();
-        else if (gamepad2.yWasPressed())
+        else if (gamepad2.y)
             robot.forwardSizzleSteak2(.75);
-        else if (gamepad2.yWasReleased())
-            robot.sizzleSteakOff2();
+        //else if (gamepad2.yWasReleased())
+           // robot.sizzleSteakOff2();
         else if (gamepad2.left_trigger >= 0.5) {
             robot.reverseLauncher(.35);
         }
