@@ -174,13 +174,7 @@ public class TeleopOpMode extends OpMode
 
         } else {
             // ignore right stick inputs if bumpers are pressed
-            if (gamepad2.right_bumper || gamepad2.left_bumper) {
-                //rotates the bot based off of set speed.
-                if (gamepad2.right_bumper)
-                    robot.move(0, 0, -2, evanButton * 0.5);
-                else if (gamepad2.left_bumper)
-                    robot.move(0, 0, 2, evanButton * 0.5);
-            } else {
+
                 // Use left joystick to go forward & strafe, and right joystick to rotate.
                 // NOTE: the robot.move() function takes values in FTC coordinate system values, where
                 // +x is forward, +y is left, and +yaw is counter-clockwise rotation.
@@ -193,8 +187,6 @@ public class TeleopOpMode extends OpMode
         // B: Stop motors
         // X: Bottom Intakes
         // Y: Launcher
-
-            }
         }
 
         // ***** Kebob / Launcher from Gamepad2 *****
@@ -214,8 +206,10 @@ public class TeleopOpMode extends OpMode
             robot.forwardSizzleSteak(1);
         else if (gamepad2.rightTriggerWasReleased())
             robot.sizzleSteakOff();
-        else if (gamepad2.yWasPressed())
+        else if (gamepad2.rightBumperWasPressed())
             robot.forwardSizzleSteak2(.82);
+        else if (gamepad2.rightBumperWasReleased())
+            robot.sizzleSteakOff();
         //else if (gamepad2.yWasReleased())
            // robot.sizzleSteakOff2();
 
