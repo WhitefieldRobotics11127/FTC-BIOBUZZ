@@ -149,6 +149,8 @@ public class TeleopOpMode extends OpMode
             speedFactor = RobotHardware.MOTOR_SPEED_FACTOR_NORMAL;
         } else if (gamepad1.x && !lastGamepad1.x) {
             speedFactor = RobotHardware.MOTOR_SPEED_FACTOR_DAVIS; // fly high fry guy
+        } else if (gamepad1.b && !lastGamepad1.b) {
+            speedFactor = RobotHardware.MOTOR_SPEED_FACTOR_PRECISE;
         } else if (gamepad1.y) {
             evanButton = speedFactor;
         }
@@ -179,7 +181,7 @@ public class TeleopOpMode extends OpMode
                 if (gamepad2.right_bumper)
                     robot.move(0, 0, -2, evanButton * 0.5);
                 else if (gamepad2.left_bumper)
-                    robot.forwardSizzleSteak2(1);
+                    robot.move(0, 0, 2, evanButton * 0.5);
             } else {
                 // Use left joystick to go forward & strafe, and right joystick to rotate.
                 // NOTE: the robot.move() function takes values in FTC coordinate system values, where
@@ -189,10 +191,9 @@ public class TeleopOpMode extends OpMode
                 double yaw = -gamepad1.right_stick_x;  // pushing stick left gives negative value
                 robot.move(axial, lateral, yaw, speedFactor);
 
-        // A: Top Intake
-        // B: Stop motors
-        // X: Bottom Intakes
-        // Y: Launcher
+
+
+
 
             }
         }
@@ -200,22 +201,27 @@ public class TeleopOpMode extends OpMode
         // ***** Kebob / Launcher from Gamepad2 *****
 
         //Controls for Player 2 - Shoot Person
+
         if (!lastGamepad2.dpad_up && gamepad2.dpad_up )
             robot.switchToIndex(0);
         else if (!lastGamepad2.dpad_down && gamepad2.dpad_down)
             robot.switchToIndex(1);
-        else if (gamepad2.leftTriggerWasPressed())
+        else if (gamepad2.a)
             robot.shootOn(robot.currLaunchVel);
-        else if (gamepad2.leftTriggerWasReleased())
+        else if (gamepad2.b)
             robot.shootOff();
-            robot.sizzleSteakOff2();
 
-        if (gamepad2.rightTriggerWasPressed())
+        else if (gamepad2.xWasPressed())
             robot.forwardSizzleSteak(1);
-        else if (gamepad2.rightTriggerWasReleased())
+        else if (gamepad2.xWasReleased())
             robot.sizzleSteakOff();
-        //else if (gamepad2.yWasReleased())
-           // robot.sizzleSteakOff2();
+        else if (gamepad2.yWasPressed())
+            robot.forwardSizzleSteak2(1);
+        else if (gamepad2.yWasReleased())
+            robot.sizzleSteakOff2();
+        else if (gamepad2.left_trigger >= 0.5) {
+            robot.reverseLauncher(.6);
+        }
 
         telemetry.addLine("-----------Player 1-----------");
         telemetry.addData("Speed Factor", speedFactorNames.get(speedFactor));
