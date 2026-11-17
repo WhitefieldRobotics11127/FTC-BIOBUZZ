@@ -175,7 +175,7 @@ public class TeleopOpMode extends OpMode
         } else {
             // ignore right stick inputs if bumpers are pressed
             if (gamepad2.right_bumper || gamepad2.left_bumper) {
-                //rotates the bot based off of set speed.
+                //rotates the bot bdased off of set speed.
                 if (gamepad2.right_bumper)
                     robot.move(0, 0, -2, evanButton * 0.5);
                 else if (gamepad2.left_bumper)
