@@ -220,7 +220,7 @@ public class TeleopOpMode extends OpMode
         else if (gamepad2.yWasReleased())
             robot.sizzleSteakOff2();
         else if (gamepad2.left_trigger >= 0.5) {
-            robot.reverseLauncher(.6);
+            robot.forwardSizzleSteak2(.835);
         }
 
         telemetry.addLine("-----------Player 1-----------");
