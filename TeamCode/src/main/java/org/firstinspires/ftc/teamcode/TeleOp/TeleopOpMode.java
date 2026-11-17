@@ -186,7 +186,7 @@ public class TeleopOpMode extends OpMode
 
         // ***** Kebob / Launcher from Gamepad2 *****
 
-        //Controls for Player 2 - Shoot Person
+        //Conntrols for Player 2 - Shoot Person
 
         if (!lastGamepad2.dpad_up && gamepad2.dpad_up )
             robot.switchToIndex(0);
